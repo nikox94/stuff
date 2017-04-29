@@ -38,30 +38,15 @@ public class Solution {
 
 	public static class Graph {
 		public Map<Integer, Set<Integer>> adjTable;
-		TreeMap<Integer, Integer> nodesByDist;
 		Integer[] dist;
-		int[] prev;
 		int n;
 
-		/**
-		 * Initialise graph with n nodes and no edges
-		 * 
-		 * @param n
-		 */
 		public Graph(int n) {
 			this.n = n;
 			dist = new Integer[n];
-			prev = new int[n];
 			adjTable = new HashMap<>(n-1);
-			nodesByDist = new TreeMap<>();
 		}
 
-		/**
-		 * Add an edge between node i and node j
-		 * 
-		 * @param i
-		 * @param j
-		 */
 		public void addEdge(int i, int j) {
 			if (!adjTable.containsKey(i))
 				adjTable.put(i, new HashSet<Integer>());
@@ -72,26 +57,23 @@ public class Solution {
 			adjTable.get(j).add(i);
 		}
 
-		// Dijkstra
+		// BFS should work here
 
 		public Integer[] findShortestPaths(int source) {
-			for (int i = 0; i < n; i++) {
-				dist[i] = Integer.MAX_VALUE;
-				prev[i] = 0;
-				nodesByDist.put(dist[i], i);
-			}
+			Set<Integer> traversed = new HashSet<>(n);
+			Queue<Integer> q = new ArrayDeque<>();
 
 			dist[source] = 0;
+			q.add(source);
+			traversed.add(source);
 
-			while (!nodesByDist.isEmpty()) {
-				int u = nodesByDist.get(nodesByDist.firstKey());
-				nodesByDist.remove(nodesByDist.firstKey(), u);
-
-				for (int neighbor : adjTable.get(u)) {
-					int altPath = dist[u] + 1;
-					if (altPath < dist[neighbor]) {
-						dist[neighbor] = altPath;
-						prev[neighbor] = u;
+			while (!q.isEmpty()) {
+				int v = q.remove();
+				for (int neighbor : adjTable.get(v)) {
+					if (!traversed.contains((Integer) neighbor)) {
+						dist[neighbor] = dist[v] + 1;
+						traversed.add(neighbor);
+						q.add(neighbor);
 					}
 				}
 			}

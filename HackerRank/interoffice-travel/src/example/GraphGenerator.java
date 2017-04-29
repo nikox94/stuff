@@ -41,6 +41,9 @@ public class GraphGenerator {
 		}
 
 		// Calculate final answer
-		System.out.println(g.findAllShortestPaths());
+		long times = System.currentTimeMillis();
+		g.findAllShortestPaths();
+		long timee = System.currentTimeMillis();
+		System.out.println(timee - times);
 	}
 }
